@@ -1,6 +1,8 @@
 package com.example.zenemegoszto;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 
+    Button startRegisterButton= findViewById(R.id.buttonRegister);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,4 +24,5 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
     }
+
 }

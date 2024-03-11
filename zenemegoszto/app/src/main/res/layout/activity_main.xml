@@ -11,20 +11,22 @@
         android:id="@+id/textViewLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
         android:text="@string/login"
-        app:layout_constraintTop_toTopOf="parent"
         android:textSize="40sp"
+        app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp" />
 
     <EditText
+        android:id="@+id/EmailLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/usernameLogin"
         android:layout_marginTop="120dp"
         android:hint="@string/emailaddres"
+        android:inputType="textEmailAddress"
         android:textAlignment="center"
         app:layout_constraintTop_toBottomOf="@id/textViewLogin"
-        tools:layout_editor_absoluteX="0dp" />
+        tools:layout_editor_absoluteX="-2dp" />
 
     <EditText
         android:layout_width="match_parent"
@@ -34,7 +36,7 @@
         android:hint="@string/password"
         android:inputType="textPassword"
         android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@id/usernameLogin"
+        app:layout_constraintTop_toBottomOf="@id/EmailLogin"
         tools:layout_editor_absoluteX="0dp" />
 
     <Button
@@ -51,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:text="Regisztráció"
+        android:text="@string/register"
         app:layout_constraintTop_toBottomOf="@id/buttonLogin"
         tools:layout_editor_absoluteX="0dp" />
 
