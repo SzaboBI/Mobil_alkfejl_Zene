@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">zenemegosztoIgazi</string>
+    <string name="login">Bejelentkezés</string>
+    <string name="password">Jelszó</string>
+    <string name="emailaddres">E-mail cím</string>
+    <string name="register">Regisztráció</string>
+</resources>
