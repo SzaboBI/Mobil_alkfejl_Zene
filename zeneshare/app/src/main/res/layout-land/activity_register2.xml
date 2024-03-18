@@ -1,51 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".register2">
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".register2">
 
-    <TextView
-        android:id="@+id/textViewRegister"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:text="@string/register"
-        android:textSize="40sp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="-1dp" />
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/textViewRegister"
-        android:id="@+id/birthdate"
-        android:hint="@string/birth_date"
-        android:textAlignment="center"
-        android:layout_marginTop="40dp"
-        android:inputType="date"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/birthdate"
-        android:id="@+id/telefonszam"
-        android:hint="@string/telefon"
-        android:textAlignment="center"
-        android:layout_marginTop="10dp"
-        android:inputType="phone"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/telefonszam"
-        android:id="@+id/registerButton"
-        android:layout_marginTop="10dp"
-        android:text="@string/register"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/registerButton"
-        android:layout_marginTop="10dp"
-        android:text="@string/cancel"
-        android:onClick="closeRegister"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/textViewRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/register"
+            android:textSize="40sp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="-1dp" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/textViewRegister"
+            android:id="@+id/birthdate"
+            android:hint="@string/birth_date"
+            android:textAlignment="center"
+            android:layout_marginTop="40dp"
+            android:inputType="date"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/birthdate"
+            android:id="@+id/telefonszam"
+            android:hint="@string/telefon"
+            android:textAlignment="center"
+            android:layout_marginTop="10dp"
+            android:inputType="phone"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/telefonszam"
+            android:id="@+id/registerButton"
+            android:layout_marginTop="10dp"
+            android:text="@string/register"
+            android:onClick="register"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/registerButton"
+            android:layout_marginTop="10dp"
+            android:text="@string/cancel"
+            android:onClick="closeRegister"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -29,4 +29,8 @@ public class register2 extends AppCompatActivity {
         Intent openLogin = new Intent(this, MainActivity.class);
         startActivity(openLogin);
     }
+
+    public void register(View view) {
+        //TODO
+    }
 }

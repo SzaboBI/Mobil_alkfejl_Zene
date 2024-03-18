@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void openRegister(View view) {
         Intent register = new Intent(this,RegisterActivity.class);
-        register.putExtra("registerType",1);
+        //register.putExtra("registerType",1);
         startActivity(register);
     }
 }

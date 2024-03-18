@@ -51,4 +51,8 @@
     <string name="cancel">Mégse</string>
     <string name="birth_date">Születési dátum</string>
     <string name="telefon">Telefon</string>
+    <string name="different_password">A két jelszó nem egyezik!</string>
+    <string name="empty" />
+    <string name="incorrect_email">Adj meg helyes e-mail cimet!</string>
+    <string name="incorrect_passwd">Nem megfelelo jelszo!</string>
 </resources>
