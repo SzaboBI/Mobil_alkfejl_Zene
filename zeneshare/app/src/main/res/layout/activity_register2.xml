@@ -35,14 +35,24 @@
             android:id="@+id/telefonszam"
             android:hint="@string/telefon"
             android:textAlignment="center"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:inputType="phone"/>
-        <Button
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/telefonszam"
+            android:id="@+id/error"
+            android:textColor="@color/red"
+            android:text="@string/unsuccesful_registration"
+            android:textAlignment="center"
+            android:layout_marginTop="15dp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/error"
             android:id="@+id/registerButton"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="15dp"
+            android:onClick="register0"
             android:text="@string/register"/>
         <Button
             android:layout_width="match_parent"

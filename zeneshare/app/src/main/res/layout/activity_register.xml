@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/registerPasswdAgain"
             android:layout_marginTop="10dp"
-            android:text="@string/incorrect_passwd"
+            android:text="@string/empty_password"
             android:textColor="@color/red"
             android:textAlignment="center"
             android:id="@+id/error"/>
