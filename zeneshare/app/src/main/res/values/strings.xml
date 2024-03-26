@@ -59,4 +59,6 @@
     <string name="empty_email">Add meg az e-mail cimed!</string>
     <string name="empty_password">Add meg a jelszavad!</string>
     <string name="unsuccessful_login">Sikertelen bejelentkezes!</string>
+    <string name="authorLabel">Szerzo:</string>
+    <string name="sizeLabel">Méret:</string>
 </resources>
