@@ -83,12 +83,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> im
     static class ViewHolder extends RecyclerView.ViewHolder{
 
         private final TextView TVTitle;
-        private final TextView TVSize;
         private final TextView TVAuthor;
         public ViewHolder(View itemView) {
             super(itemView);
             TVTitle = itemView.findViewById(R.id.songTitle);
-            TVSize = itemView.findViewById(R.id.size);
             TVAuthor = itemView.findViewById(R.id.author);
             itemView.findViewById(R.id.playButton).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -101,7 +99,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> im
         public void bindTo(song currentItem) {
             TVTitle.setText(currentItem.getTitle());
             TVAuthor.setText(currentItem.getAuthor());
-            TVSize.setText(currentItem.getSizeAsString());
         }
     };
 }

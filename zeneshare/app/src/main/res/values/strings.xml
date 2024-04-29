@@ -61,4 +61,8 @@
     <string name="unsuccessful_login">Sikertelen bejelentkezes!</string>
     <string name="authorLabel">Szerzo:</string>
     <string name="sizeLabel">Méret:</string>
+    <string name="author">Szerzo</string>
+    <string name="title">Cim</string>
+    <string name="upload">Feltoltes</string>
+    <string name="selectFile">Valassz fajlt</string>
 </resources>
