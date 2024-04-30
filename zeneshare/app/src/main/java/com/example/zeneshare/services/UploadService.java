@@ -48,30 +48,27 @@ public class UploadService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String fileUri = intent.getStringExtra("fileUri");
+        String filename = intent.getStringExtra("filename");
         if (fileUri != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 startForeground(1, createNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
             } else {
                 startForeground(1, createNotification());
             }
-            uploadFile(Uri.parse(fileUri));
+            uploadFile(Uri.parse(fileUri),filename);
         }
         return START_NOT_STICKY;
     }
 
-    private void uploadFile(Uri fileUri) {
+    private void uploadFile(Uri fileUri, String filename) {
         StorageReference songsRef = storageRef.child("songs");
-        String[] fileUriParts = fileUri.toString().split("/");
-        StorageReference fileRef = songsRef.child(fileUriParts[fileUriParts.length-1]+".mp3");
+        StorageReference fileRef = songsRef.child(filename);
         Log.i(TAG,fileRef.toString());
         File file = new File(String.valueOf(fileUri));
         if (!file.exists()) {
             Log.e(TAG, "File not found: " + fileUri);
         }
-        StorageMetadata metadata = new StorageMetadata.Builder()
-                .setContentType("audio/mpeg")
-                .build();
-        UploadTask uploadTask = fileRef.putFile(Uri.fromFile(file), metadata);
+        UploadTask uploadTask = fileRef.putFile(Uri.fromFile(file));
 
         uploadTask.addOnProgressListener(taskSnapshot -> {
             long bytesTransferred = taskSnapshot.getBytesTransferred();
