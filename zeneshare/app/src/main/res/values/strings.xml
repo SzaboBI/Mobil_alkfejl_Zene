@@ -65,4 +65,5 @@
     <string name="title">Cim</string>
     <string name="upload">Feltoltes</string>
     <string name="selectFile">Valassz fajlt</string>
+    <string name="permissiondenied">Add meg az engedelyeket!</string>
 </resources>

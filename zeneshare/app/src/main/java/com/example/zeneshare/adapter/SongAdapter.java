@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,16 +22,18 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> im
     private ArrayList<song> songsData;
     private ArrayList<song> allSongsData;
     private Context mContext;
+    private SongClickListener listener;
     private int lastPosition = -1;
 
-    public SongAdapter(Context context, ArrayList<song> itemData){
+    public SongAdapter(Context context, ArrayList<song> itemData, SongClickListener listener){
         this.songsData=itemData;
         this.allSongsData=itemData;
         this.mContext = context;
+        this.listener = listener;
     }
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.song_list, parent, false));
+        return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.song_list, parent, false),listener);
     }
 
     @Override
@@ -84,13 +87,17 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> im
 
         private final TextView TVTitle;
         private final TextView TVAuthor;
-        public ViewHolder(View itemView) {
+        private final ImageButton IBdownload;
+        public ViewHolder(View itemView, SongClickListener listener) {
             super(itemView);
             TVTitle = itemView.findViewById(R.id.songTitle);
             TVAuthor = itemView.findViewById(R.id.author);
-            itemView.findViewById(R.id.playButton).setOnClickListener(new View.OnClickListener() {
+            IBdownload = itemView.findViewById(R.id.playButton);
+            IBdownload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String id = (String) TVAuthor.getTag();
+                    listener.onSongClicked(id);
 
                 }
             });
@@ -98,7 +105,17 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> im
 
         public void bindTo(song currentItem) {
             TVTitle.setText(currentItem.getTitle());
+            TVAuthor.setTag(currentItem.idGet());
             TVAuthor.setText(currentItem.getAuthor());
+            if (currentItem.getDownloaded()){
+                IBdownload.setClickable(false);
+                IBdownload.setVisibility(View.INVISIBLE);
+            }
+            else {
+                IBdownload.setClickable(true);
+                IBdownload.setVisibility(View.VISIBLE);
+            }
+
         }
     };
 }

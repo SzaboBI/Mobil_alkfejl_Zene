@@ -15,7 +15,7 @@
             android:id="@+id/playButton"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:src="@drawable/playbuttonimage"
+            android:src="@drawable/downloadbuttonimage"
             android:scaleType="fitXY"
             android:background="@android:color/transparent"
             android:onClick="playSong"/>

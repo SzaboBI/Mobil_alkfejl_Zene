@@ -52,7 +52,7 @@
             app:layout_constraintTop_toBottomOf="@id/error"
             android:id="@+id/registerButton"
             android:layout_marginTop="15dp"
-            android:onClick="register0"
+            android:onClick="register"
             android:text="@string/register"/>
         <Button
             android:layout_width="match_parent"

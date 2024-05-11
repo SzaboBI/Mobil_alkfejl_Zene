@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -64,7 +66,6 @@ public class UploadSong extends AppCompatActivity {
             ETSongTitle = findViewById(R.id.songTitle);
             songDB=FirebaseFirestore.getInstance();
             songRef = songDB.collection("Songs");
-            requestPermissions();
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
                 Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
                 v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -84,34 +85,6 @@ public class UploadSong extends AppCompatActivity {
 
     }
 
-    private void requestPermissions() {
-        // Check if permissions are granted
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_AUDIO)
-                != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                        != PackageManager.PERMISSION_GRANTED) {
-            // Request permissions
-            ActivityCompat.requestPermissions(this,
-                    new String[]{
-                            Manifest.permission.READ_MEDIA_AUDIO,
-                            Manifest.permission.POST_NOTIFICATIONS
-                    },
-                    1);
-        }
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
-            // Check if the permission is granted
-            if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                // Permission granted, you can proceed with your operations
-            } else {
-                // Permission denied, handle accordingly
-            }
-        }
-    }
-
     public void selectFile(View view) {
         audioPickerLauncher.launch("audio/*");
     }
@@ -129,12 +102,6 @@ public class UploadSong extends AppCompatActivity {
         if (filePath == null){
             TVfilePathShow.setText("Adj meg egy fajlt!");
             TVfilePathShow.setTextColor(R.color.red);
-        } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_AUDIO)
-                == PackageManager.PERMISSION_DENIED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                        == PackageManager.PERMISSION_DENIED) {
-            TVfilePathShow.setText("Add meg az engedelyeket!");
-            requestPermissions();
         } else {
             String songAuthor = ETSongAuthor.getText().toString().trim();
             String songTitle = ETSongTitle.getText().toString().trim();

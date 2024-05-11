@@ -8,6 +8,7 @@ public class song {
     private String fileName;
     private Boolean downloaded;
     private String user;
+    private String documentID;
 
     public song(){}
 
@@ -36,5 +37,12 @@ public class song {
     }
     public void download(){
         this.downloaded = true;
+    }
+    public String idGet(){
+        return this.documentID;
+    }
+
+    public void setDocumentID(String documentID) {
+        this.documentID = documentID;
     }
 }

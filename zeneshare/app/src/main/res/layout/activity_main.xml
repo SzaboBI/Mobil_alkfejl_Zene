@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/error"
-            android:text="@string/unsuccessful_login"
+            android:text="@string/permissiondenied"
             android:textAlignment="center"
             android:textColor="@color/red"
             app:layout_constraintTop_toBottomOf="@+id/passwordLogin"
