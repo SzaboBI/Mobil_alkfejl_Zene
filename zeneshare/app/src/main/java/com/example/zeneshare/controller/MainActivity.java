@@ -121,11 +121,14 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED ) {
+                    != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED) {
                 // Request permissions
                 ActivityCompat.requestPermissions(this,
                         new String[]{
-                                Manifest.permission.READ_EXTERNAL_STORAGE
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
                         },
                         1);
             }

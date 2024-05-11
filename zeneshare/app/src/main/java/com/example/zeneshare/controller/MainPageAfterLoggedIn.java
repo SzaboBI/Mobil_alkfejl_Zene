@@ -2,9 +2,12 @@ package com.example.zeneshare.controller;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 
@@ -24,6 +27,7 @@ import com.example.zeneshare.model.song;
 import com.example.zeneshare.services.DownloadService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.reflect.TypeToken;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -36,9 +40,14 @@ import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 public class MainPageAfterLoggedIn extends AppCompatActivity implements SongClickListener {
@@ -58,15 +67,13 @@ public class MainPageAfterLoggedIn extends AppCompatActivity implements SongClic
             super.onCreate(savedInstanceState);
             EdgeToEdge.enable(this);
             setContentView(R.layout.activity_main_page_after_logged_in);
-            songDB=FirebaseFirestore.getInstance();
             storage = FirebaseStorage.getInstance();
-            songItems = songDB.collection("Songs");
             recyclerView = findViewById(R.id.songRecyclerView);
             recyclerView.setLayoutManager(new GridLayoutManager(this,1));
             songs = new ArrayList<>();
             songAdapter = new SongAdapter(this,songs,this);
             recyclerView.setAdapter(songAdapter);
-            getSongsFromDB();
+
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
                 Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
                 v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -80,6 +87,28 @@ public class MainPageAfterLoggedIn extends AppCompatActivity implements SongClic
             startActivity(openLogin);
         }
 
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    protected void onResume() {
+        super.onResume();
+        songDB=FirebaseFirestore.getInstance();
+        songItems = songDB.collection("Songs");
+        ArrayList<song> downloadedSongs = new ArrayList<>();
+        getSongsFromDB();
+        File inputJSON = new File(Environment.getExternalStorageDirectory()+"/Documents/.zeneMegoszto/downloaded.json");
+        if (inputJSON.exists()){
+            Gson gson = new Gson();
+            try {
+                FileReader fr = new FileReader(inputJSON);
+                Type listType = new TypeToken<ArrayList<song>>(){}.getType();
+                downloadedSongs.addAll(gson.fromJson(fr,listType));
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        downloadMissingFiles(downloadedSongs);
     }
 
     @Override
@@ -152,7 +181,11 @@ public class MainPageAfterLoggedIn extends AppCompatActivity implements SongClic
                 }
                 songs.get(i).download();
                 songAdapter.notifyDataSetChanged();
-                downloadSong(filename);
+                ConnectivityManager manager = getSystemService(ConnectivityManager.class);
+                NetworkCapabilities capabilities = manager.getNetworkCapabilities(manager.getActiveNetwork());
+                if (capabilities != null && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)){
+                    downloadSong(filename);
+                }
             }
         });
     }
@@ -173,14 +206,21 @@ public class MainPageAfterLoggedIn extends AppCompatActivity implements SongClic
                 }
             }
             String jsonContent = gson.toJson(downloadedSongs);
+            File appDir = new File(Environment.getExternalStorageDirectory(),"/Documents/.zeneMegoszto");
+            appDir.mkdirs();
+            File JSONFile = new File(appDir, "downloaded.json");
+            if (!JSONFile.exists()){
+                try {
+                    JSONFile.createNewFile();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
             try {
-                File appDir = new File(Environment.getExternalStorageDirectory()+"/Android/data/.zeneMegoszto");
-                File JSONFile = new File(appDir, "downloaded.json");
                 FileOutputStream fos = new FileOutputStream(JSONFile);
                 try {
                     fos.write(jsonContent.getBytes());
                     fos.close();
-                    Log.i(MainPageAfterLoggedIn.class.getName(), jsonContent);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -190,4 +230,26 @@ public class MainPageAfterLoggedIn extends AppCompatActivity implements SongClic
             return null;
         }
     }
+
+    public void downloadMissingFiles(ArrayList<song> allSong){
+        new DownloadMissingFiles().execute(allSong);
+    }
+
+    private class DownloadMissingFiles extends AsyncTask<ArrayList<song>, Void, Void>{
+
+        @Override
+        protected Void doInBackground(ArrayList<song>... arrayLists) {
+            for (int i =0; i < arrayLists[0].size(); i++){
+                Log.i(MainPageAfterLoggedIn.class.getName(),arrayLists[0].get(i).idGet());
+                if (arrayLists[0].get(i).getDownloaded()){
+                    File file = new File(Environment.getExternalStorageDirectory()+"/Download/zeneMegoszto/"+arrayLists[0].get(i).getFileName());
+                    if (!file.exists()){
+                        downloadSong(arrayLists[0].get(i).getFileName());
+                    }
+                }
+            }
+            return null;
+        }
+    }
+
 }
