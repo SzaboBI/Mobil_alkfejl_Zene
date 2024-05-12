@@ -17,11 +17,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DownloadService extends Service{
 
@@ -44,55 +44,57 @@ public class DownloadService extends Service{
 
         startForeground(1, notificationHadler.createNotification());
 
-        downloadFile(fileName);
+        downloadWithFormatingFile(fileName);
 
 
         return START_NOT_STICKY;
     }
 
+    private void downloadWithFormatingFile(String rawFileName) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference("songs").child(rawFileName);
+        storageRef.getMetadata().addOnCompleteListener(task -> {
+            switch (task.getResult().getContentType()){
+                case "audio/mpeg":
+                    downloadFile(rawFileName+".mp3");
+                    break;
+                case "audio/mp4":
+                    downloadFile(rawFileName+".m4a");
+                    break;
+                case "audio/ogg":
+                    downloadFile(rawFileName+".ogg");
+                    break;
+                case "audio/mid":
+                    downloadFile(rawFileName+".mid");
+                    break;
+                case "audio/x-aiff":
+                    downloadFile(rawFileName+".aif");
+                    break;
+                case "audio/vnd.wav":
+                    downloadFile(rawFileName+".wav");
+                    break;
+                case "audio/vnd.rn-realaudio":
+                    downloadFile(rawFileName+".ram");
+                    break;
+                default:
+                    downloadFile(rawFileName+".au");
+                    break;
+            }
+        });
+    }
+
     private void downloadFile(String fileName) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference("songs").child(fileName);
-        Log.i(TAG, storageRef.toString());
+        StorageReference storageRef = storage.getReference("songs").child(fileName.split("\\.")[0]);
 
         File directory = new File(Environment.getExternalStorageDirectory()+"/Download", "zeneMegoszto");
         if (!directory.exists()){
             directory.mkdir();
         }
-        final File[] localFile = {new File(directory, fileName)};
-        storageRef.getMetadata().addOnCompleteListener(new OnCompleteListener<StorageMetadata>() {
-            @Override
-            public void onComplete(@NonNull Task<StorageMetadata> task) {
-                switch (task.getResult().getContentType()){
-                    case "audio/mpeg":
-                        localFile[0].renameTo(new File(directory, fileName+".mp3"));
-                        break;
-                    case "audio/mp4":
-                        localFile[0].renameTo(new File(directory, fileName+".m4a"));
-                        break;
-                    case "audio/ogg":
-                        localFile[0].renameTo(new File(directory, fileName+".ogg"));
-                        break;
-                    case "audio/mid":
-                        localFile[0].renameTo(new File(directory, fileName+".mid"));
-                        break;
-                    case "audio/x-aiff":
-                        localFile[0].renameTo(new File(directory, fileName+".aif"));
-                        break;
-                    case "audio/vnd.wav":
-                        localFile[0].renameTo(new File(directory, fileName+".wav"));
-                        break;
-                    case "audio/vnd.rn-realaudio":
-                        localFile[0].renameTo(new File(directory, fileName+".ram"));
-                        break;
-                    default:
-                        localFile[0].renameTo(new File(directory, fileName+".au"));
-                        break;
-                }
-            }
-        });
 
-        storageRef.getFile(localFile[0]).addOnProgressListener(taskSnapshot -> {
+
+        Log.i(TAG, fileName);
+        storageRef.getFile(new File(directory, fileName)).addOnProgressListener(taskSnapshot -> {
             double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
             notificationHadler.updateProgressNotification((int) progress);
@@ -116,7 +118,9 @@ public class DownloadService extends Service{
             public void onComplete(@NonNull Task<Void> task) {
                 Log.i(TAG, "Successful download!");
                 notificationHadler.successfulEnd();
-                songDb.collection("Songs").whereEqualTo("fileName", fileName).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                Log.i(TAG, fileName.split("\\.")[0]);
+
+                songDb.collection("Songs").whereEqualTo("fileName", fileName.split("\\.")[0]).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         String id = task.getResult().getDocuments().get(0).getId();
