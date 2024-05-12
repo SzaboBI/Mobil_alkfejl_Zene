@@ -105,7 +105,6 @@ public class MainPageAfterLoggedIn extends AppCompatActivity implements SongClic
                 Type listType = new TypeToken<ArrayList<song>>(){}.getType();
                 downloadedSongs.addAll(gson.fromJson(fr,listType));
             } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
             }
         }
         downloadMissingFiles(downloadedSongs);
